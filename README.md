@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AURUM — AI Hair System Landing Page
 
-## Getting Started
+AURUM is a cinematic landing page concept for an AI-driven automated hair system. The experience is designed as a premium black-and-gold narrative site that walks visitors through scan-inspired head-shape visuals, curated hairstyle recommendations, and a future-salon brand story.
 
-First, run the development server:
+## Current Scope
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This repository focuses on the **frontend brand and product experience**. It presents a polished landing page and visual concept for AURUM rather than a backend-powered production system.
+
+The UI is primarily written in **Traditional Chinese (`zh-TW`)**.
+
+## Overview
+
+This project is a frontend-first brand experience built with Next.js App Router. The homepage is structured as a five-part immersive journey:
+
+1. **Awaken** — introduces the AURUM system with sensor-style visuals
+2. **Scan** — presents scan-inspired head mapping visuals and precision analysis cues
+3. **Evolve** — showcases curated hairstyle recommendation visuals with local assets
+4. **Arrive** — frames the premium automated salon experience
+5. **Final** — closes on the AURUM brand and product vision
+
+## Highlights
+
+- Full-screen scroll-snap storytelling homepage
+- Black-and-gold luxury visual system with custom motion, glow, and HUD-inspired details
+- Curated hairstyle recommendation section powered by local image assets
+- Canvas-based ambient visuals across the landing-page narrative
+- Component-driven homepage structure with dynamically loaded sections
+
+## Tech Stack
+
+- **Next.js 16**
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS v4**
+- Custom canvas animation and `next/image` asset rendering
+
+## Project Structure
+
+```text
+app/
+  layout.tsx
+  page.tsx
+  globals.css
+components/
+  NavDots.tsx
+  SectionAwaken.tsx
+  SectionScan.tsx
+  SectionEvolve.tsx
+  SectionArrive.tsx
+  SectionFinal.tsx
+public/
+  hair-styles/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Hairstyle Assets
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The recommendation section uses local assets stored in:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+public/hair-styles/
+```
 
-## Learn More
+Current included styles:
 
-To learn more about Next.js, take a look at the following resources:
+- 液態短鮑伯
+- 鎖骨長鮑伯
+- 長層次蝴蝶剪
+- 雕塑感自然捲
+- 精品吹整中長髮
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Local Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Install dependencies and start the dev server:
 
-## Deploy on Vercel
+```bash
+npm install
+npm run dev
+npm run lint
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Then open:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+http://localhost:3000
+```
+
+## Build
+
+To create a production build:
+
+```bash
+npm run build
+```
+
+To run the production server locally:
+
+```bash
+npm run start
+```
+
+## Repository Description
+
+Recommended GitHub description:
+
+> Cinematic Next.js landing page concept for AURUM with scan-inspired visuals, curated hairstyle recommendations, and premium salon branding.
