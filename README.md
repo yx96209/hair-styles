@@ -98,6 +98,33 @@ To run the production server locally:
 npm run start
 ```
 
+## GitHub Pages Deployment
+
+This project is configured for **GitHub Pages static export** on the custom domain:
+
+```text
+https://hair.yx209.net/
+```
+
+Deployment is handled by GitHub Actions through:
+
+```text
+.github/workflows/deploy-pages.yml
+```
+
+GitHub Pages-specific configuration includes:
+
+- `output: "export"` in `next.config.ts`
+- `images.unoptimized: true` for `next/image`
+- `public/CNAME` for the custom domain
+- `public/.nojekyll` so `_next` assets are served correctly
+
+To finish setup in GitHub:
+
+1. Open repository **Settings** → **Pages**
+2. Set **Source** to **GitHub Actions**
+3. In your DNS provider, point `hair.yx209.net` to GitHub Pages
+
 ## Repository Description
 
 Recommended GitHub description:
