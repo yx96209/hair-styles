@@ -6,7 +6,7 @@ interface NavDotsProps {
   onDotClick: (index: number) => void;
 }
 
-const LABELS = ["覺醒", "掃描", "演化", "降臨", "品牌"];
+const LABELS = ["覺醒", "掃描", "演化", "降臨", "案例", "預約", "品牌"];
 
 export default function NavDots({ count, active, onDotClick }: NavDotsProps) {
   return (
