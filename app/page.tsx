@@ -8,9 +8,11 @@ const SectionAwaken = dynamic(() => import("@/components/SectionAwaken"), { ssr:
 const SectionScan = dynamic(() => import("@/components/SectionScan"), { ssr: false });
 const SectionEvolve = dynamic(() => import("@/components/SectionEvolve"), { ssr: false });
 const SectionArrive = dynamic(() => import("@/components/SectionArrive"), { ssr: false });
+const SectionCases = dynamic(() => import("@/components/SectionCases"), { ssr: false });
+const SectionContact = dynamic(() => import("@/components/SectionContact"), { ssr: false });
 const SectionFinal = dynamic(() => import("@/components/SectionFinal"), { ssr: false });
 
-const SECTION_COUNT = 5;
+const SECTION_COUNT = 7;
 
 export default function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,8 @@ export default function Home() {
         <SectionScan />
         <SectionEvolve />
         <SectionArrive />
+        <SectionCases />
+        <SectionContact />
         <SectionFinal />
       </div>
     </>
