@@ -172,6 +172,7 @@ export default function SectionContact() {
               週二 ─ 週日<br />10:00 ─ 20:00
             </p>
             <button
+              onClick={() => window.open("https://youtu.be/ESKTiYwV7iA", "_blank")}
               style={{
                 padding: "0.75rem 2rem",
                 border: "1px solid rgba(201,169,110,0.5)",
