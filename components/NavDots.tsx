@@ -16,8 +16,8 @@ export default function NavDots({ count, active, onDotClick }: NavDotsProps) {
           key={i}
           className={`nav-dot ${i === active ? "active" : ""}`}
           onClick={() => onDotClick(i)}
-          title={LABELS[i]}
-          aria-label={`前往 ${LABELS[i]} 章節`}
+          title={LABELS[i] ?? `第 ${i + 1} 章節`}
+          aria-label={`前往 ${LABELS[i] ?? `第 ${i + 1} 章節`} 章節`}
         />
       ))}
     </div>
