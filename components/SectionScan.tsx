@@ -199,6 +199,8 @@ export default function SectionScan() {
         <div>SCAN STATUS: ACTIVE</div>
         <div>RESOLUTION: 0.01mm</div>
         <div>POINTS: 247,832</div>
+        <div style={{ marginTop: "0.5rem", color: "rgba(201,169,110,0.7)" }}>CUSTOMERS SERVED: 12,400+</div>
+        <div>AVG SESSION: 4.2 min</div>
       </div>
 
       <div
