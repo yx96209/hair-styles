@@ -12,6 +12,7 @@ const HAIRSTYLES = [
     tags: ["俐落", "現代", "低維護"],
     file: "/hair-styles/液態短鮑伯.png",
     confidence: 97,
+    recommendCount: 3210,
   },
   {
     id: 1,
@@ -21,6 +22,7 @@ const HAIRSTYLES = [
     tags: ["優雅", "百搭", "顯臉小"],
     file: "/hair-styles/鎖骨長鮑伯.png",
     confidence: 94,
+    recommendCount: 2840,
   },
   {
     id: 2,
@@ -30,6 +32,7 @@ const HAIRSTYLES = [
     tags: ["浪漫", "層次", "蓬鬆"],
     file: "/hair-styles/長層次蝴蝶剪.png",
     confidence: 91,
+    recommendCount: 1990,
   },
   {
     id: 3,
@@ -39,6 +42,7 @@ const HAIRSTYLES = [
     tags: ["個性", "立體", "自然"],
     file: "/hair-styles/雕塑感自然捲.png",
     confidence: 89,
+    recommendCount: 1560,
   },
   {
     id: 4,
@@ -48,6 +52,7 @@ const HAIRSTYLES = [
     tags: ["光澤", "柔順", "氣質"],
     file: "/hair-styles/精品吹整中長髮.png",
     confidence: 96,
+    recommendCount: 2800,
   },
 ];
 
@@ -332,9 +337,31 @@ export default function SectionEvolve() {
                 </span>
               ))}
             </div>
+            {/* Recommend count */}
+            <p style={{
+              fontSize: "0.6rem",
+              letterSpacing: "0.25em",
+              color: "rgba(255,255,255,0.2)",
+              marginBottom: "1.5rem",
+            }}>
+              本款已推薦{" "}
+              <span style={{ color: "rgba(201,169,110,0.6)" }}>
+                {cur.recommendCount.toLocaleString()}
+              </span>
+              {" "}位顧客
+            </p>
           </div>
 
-          {/* Progress bar */}
+          {/* Satisfaction rate */}
+          <p style={{
+            fontSize: "0.55rem",
+            letterSpacing: "0.3em",
+            color: "rgba(255,255,255,0.18)",
+            marginBottom: "0.6rem",
+            textTransform: "uppercase",
+          }}>
+            全體顧客滿意度 · 97.8%
+          </p>
           <div style={{
             width: "100%", maxWidth: 280,
             height: 1,
