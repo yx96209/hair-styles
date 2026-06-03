@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 
 const HAIRSTYLES = [
@@ -61,6 +61,7 @@ export default function SectionEvolve() {
   const [prev, setPrev] = useState<number | null>(null);
   const [transitioning, setTransitioning] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const goTo = useCallback(
@@ -90,7 +91,8 @@ export default function SectionEvolve() {
   // Ambient canvas
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -115,8 +117,9 @@ export default function SectionEvolve() {
 
     let frame = 0;
     let raf: number;
-    const draw = () => {
-      raf = requestAnimationFrame(draw);
+    let running = false;
+    const loop = () => {
+      if (!running) return;
       frame++;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -144,9 +147,23 @@ export default function SectionEvolve() {
         ctx.fillStyle = `rgba(201,169,110,${d.a})`;
         ctx.fill();
       });
+      raf = requestAnimationFrame(loop);
     };
-    draw();
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        loop();
+      } else if (!entry.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0 });
+    observer.observe(section);
+
     return () => {
+      observer.disconnect();
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
@@ -157,6 +174,7 @@ export default function SectionEvolve() {
 
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       className="scroll-section"
       style={{ background: "#060504", overflow: "hidden" }}
     >

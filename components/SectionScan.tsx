@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface Point3D {
   x: number; y: number; z: number;
@@ -10,10 +10,12 @@ interface Point3D {
 
 export default function SectionScan() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -51,10 +53,11 @@ export default function SectionScan() {
 
     let frame = 0;
     let raf: number;
+    let running = false;
     const rotY = { v: 0.008 };
 
-    const draw = () => {
-      raf = requestAnimationFrame(draw);
+    const loop = () => {
+      if (!running) return;
       frame++;
 
       ctx.fillStyle = "rgba(5,5,5,0.25)";
@@ -144,10 +147,23 @@ export default function SectionScan() {
           ctx.stroke();
         }
       }
+      raf = requestAnimationFrame(loop);
     };
 
-    draw();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        loop();
+      } else if (!entry.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0 });
+    observer.observe(section);
+
     return () => {
+      observer.disconnect();
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
@@ -155,6 +171,7 @@ export default function SectionScan() {
 
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       className="scroll-section"
       style={{
         background: "radial-gradient(ellipse at center top, #0d0a06 0%, #050505 70%)",

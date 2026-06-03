@@ -9,15 +9,19 @@ const SectionScan = dynamic(() => import("@/components/SectionScan"), { ssr: fal
 const SectionEvolve = dynamic(() => import("@/components/SectionEvolve"), { ssr: false });
 const SectionArrive = dynamic(() => import("@/components/SectionArrive"), { ssr: false });
 const SectionCases = dynamic(() => import("@/components/SectionCases"), { ssr: false });
+const SectionProduct = dynamic(() => import("@/components/SectionProduct"), { ssr: false });
 const SectionContact = dynamic(() => import("@/components/SectionContact"), { ssr: false });
+const SectionPurchase = dynamic(() => import("@/components/SectionPurchase"), { ssr: false });
 const SectionFinal = dynamic(() => import("@/components/SectionFinal"), { ssr: false });
 
-const SECTION_COUNT = 7;
+const SECTION_COUNT = 9;
+const PURCHASE_SECTION_INDEX = 7;
 
 export default function Home() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState<string | undefined>(undefined);
 
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
@@ -27,7 +31,6 @@ export default function Home() {
     const pct = totalHeight > 0 ? scrollTop / totalHeight : 0;
     setProgress(pct * 100);
 
-    // Active section detection
     const sectionIndex = Math.round(scrollTop / el.clientHeight);
     setActiveSection(Math.min(sectionIndex, SECTION_COUNT - 1));
   }, []);
@@ -44,6 +47,11 @@ export default function Home() {
     if (!el) return;
     el.scrollTo({ top: index * el.clientHeight, behavior: "smooth" });
   }, []);
+
+  const handleBuyClick = useCallback((productName?: string) => {
+    if (productName) setSelectedProduct(productName);
+    scrollToSection(PURCHASE_SECTION_INDEX);
+  }, [scrollToSection]);
 
   return (
     <>
@@ -64,7 +72,9 @@ export default function Home() {
         <SectionEvolve />
         <SectionArrive />
         <SectionCases />
-        <SectionContact />
+        <SectionProduct onBuyClick={handleBuyClick} />
+        <SectionContact onBuyClick={() => handleBuyClick()} />
+        <SectionPurchase defaultProduct={selectedProduct} />
         <SectionFinal />
       </div>
     </>

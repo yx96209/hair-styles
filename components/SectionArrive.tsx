@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function SectionArrive() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -20,9 +22,10 @@ export default function SectionArrive() {
 
     let frame = 0;
     let raf: number;
+    let running = false;
 
-    const draw = () => {
-      raf = requestAnimationFrame(draw);
+    const loop = () => {
+      if (!running) return;
       frame++;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -223,10 +226,23 @@ export default function SectionArrive() {
         ctx.fillStyle = lg;
         ctx.fillRect(lx - 120, 0, 240, 200);
       }
+      raf = requestAnimationFrame(loop);
     };
 
-    draw();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        loop();
+      } else if (!entry.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0 });
+    observer.observe(section);
+
     return () => {
+      observer.disconnect();
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
@@ -234,6 +250,7 @@ export default function SectionArrive() {
 
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       className="scroll-section"
       style={{
         background: "linear-gradient(180deg, #08070500 0%, #050505 100%)",

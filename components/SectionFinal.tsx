@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function SectionFinal() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -20,9 +22,10 @@ export default function SectionFinal() {
 
     let frame = 0;
     let raf: number;
+    let running = false;
 
-    const draw = () => {
-      raf = requestAnimationFrame(draw);
+    const loop = () => {
+      if (!running) return;
       frame++;
 
       ctx.fillStyle = "rgba(3,3,3,0.12)";
@@ -52,10 +55,23 @@ export default function SectionFinal() {
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.restore();
+      raf = requestAnimationFrame(loop);
     };
 
-    draw();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        loop();
+      } else if (!entry.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0 });
+    observer.observe(section);
+
     return () => {
+      observer.disconnect();
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
@@ -63,6 +79,7 @@ export default function SectionFinal() {
 
   return (
     <section
+      ref={sectionRef as React.RefObject<HTMLElement>}
       className="scroll-section final-section"
       style={{
         background: "#030303",

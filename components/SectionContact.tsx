@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
+
+interface SectionContactProps {
+  onBuyClick?: () => void;
+}
 
 const STEPS = [
   { num: "01", icon: "◎", title: "3D 頭型掃描", sub: "約 4 分鐘" },
@@ -9,12 +13,14 @@ const STEPS = [
   { num: "04", icon: "✂", title: "精準剪造完成", sub: "享受專屬成果" },
 ];
 
-export default function SectionContact() {
+export default function SectionContact({ onBuyClick }: SectionContactProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -27,8 +33,9 @@ export default function SectionContact() {
 
     let frame = 0;
     let raf: number;
-    const draw = () => {
-      raf = requestAnimationFrame(draw);
+    let running = false;
+    const loop = () => {
+      if (!running) return;
       frame++;
       ctx.fillStyle = "rgba(4,3,3,0.12)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -41,16 +48,30 @@ export default function SectionContact() {
       glow.addColorStop(1, "transparent");
       ctx.fillStyle = glow;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      raf = requestAnimationFrame(loop);
     };
-    draw();
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        loop();
+      } else if (!entry.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0 });
+    observer.observe(section);
+
     return () => {
+      observer.disconnect();
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
-    <section className="scroll-section" style={{ background: "#030303" }}>
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="scroll-section" style={{ background: "#030303" }}>
       <canvas ref={canvasRef} className="canvas-cover" />
       <div className="noise-overlay" />
 
@@ -172,7 +193,7 @@ export default function SectionContact() {
               週二 ─ 週日<br />10:00 ─ 20:00
             </p>
             <button
-              onClick={() => window.open("https://youtu.be/ESKTiYwV7iA", "_blank")}
+              onClick={onBuyClick}
               style={{
                 padding: "0.75rem 2rem",
                 border: "1px solid rgba(201,169,110,0.5)",
@@ -193,8 +214,32 @@ export default function SectionContact() {
                 btn.style.borderColor = "rgba(201,169,110,0.5)";
               }}
             >
-              立即預約體驗
+              立即購買體驗
             </button>
+
+            {/* Customer service email */}
+            <div style={{ marginTop: "1.25rem" }}>
+              <p style={{
+                fontSize: "0.5rem", letterSpacing: "0.3em",
+                color: "rgba(201,169,110,0.4)", marginBottom: "0.4rem",
+              }}>
+                客服信箱
+              </p>
+              <a
+                href="mailto:aurum@yx209.net"
+                style={{
+                  fontSize: "0.72rem",
+                  color: "rgba(255,255,255,0.45)",
+                  letterSpacing: "0.06em",
+                  textDecoration: "none",
+                  transition: "color 0.25s ease",
+                }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "rgba(201,169,110,0.8)")}
+                onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.45)")}
+              >
+                aurum@yx209.net
+              </a>
+            </div>
           </div>
         </div>
       </div>

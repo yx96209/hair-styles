@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function SectionAwaken() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const section = sectionRef.current;
+    if (!canvas || !section) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -37,9 +39,10 @@ export default function SectionAwaken() {
 
     let frame = 0;
     let raf: number;
+    let running = false;
 
-    const draw = () => {
-      raf = requestAnimationFrame(draw);
+    const loop = () => {
+      if (!running) return;
       frame++;
 
       ctx.fillStyle = "rgba(5,5,5,0.15)";
@@ -92,17 +95,30 @@ export default function SectionAwaken() {
       ctx.arc(cx, cy, 200 * breathe, 0, Math.PI * 2);
       ctx.fillStyle = grd;
       ctx.fill();
+      raf = requestAnimationFrame(loop);
     };
 
-    draw();
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) {
+        running = true;
+        loop();
+      } else if (!entry.isIntersecting) {
+        running = false;
+        cancelAnimationFrame(raf);
+      }
+    }, { threshold: 0 });
+    observer.observe(section);
+
     return () => {
+      observer.disconnect();
+      running = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
-    <section className="scroll-section" style={{ background: "#050505" }}>
+    <section ref={sectionRef as React.RefObject<HTMLElement>} className="scroll-section" style={{ background: "#050505" }}>
       <div className="noise-overlay" />
       <canvas ref={canvasRef} className="canvas-cover" />
 
